@@ -1,0 +1,27 @@
+{
+// Make Ammo weightless
+// Default: true
+  "lightAmmo": {
+    "enabled": true
+},
+// Make Throwables weightless
+// Default: true
+"lightThrowables": {
+  "enabled": true
+},
+// Make Food weightless
+// Default: true
+"lightFood": {
+  "enabled": true
+},
+// Make Drinks weightless
+// Default: true
+"lightDrink": {
+  "enabled": true
+},
+// Make Medical Supplies weightless
+// Default: true
+"lightMeds": {
+  "enabled": true
+}
+}
