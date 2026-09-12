@@ -1,0 +1,17 @@
+{
+  "lightAmmo": {
+    "enabled": true
+  },
+  "lightThrowables": {
+    "enabled": true
+  },
+  "lightFood": {
+    "enabled": true
+  },
+  "lightDrink": {
+    "enabled": true
+  },
+  "lightMeds": {
+    "enabled": true
+  }
+}

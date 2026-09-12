@@ -1,86 +1,62 @@
-<!--
-#
-#
-###########################
-#                         #
-#  Saint @ Shardbyte.com  #
-#                         #
-###########################
-# Author: Shardbyte
-# License: MIT
-#
--->
-<div id="header" align="center">
-  <img src="https://raw.githubusercontent.com/Shardbyte/Shardbyte/main/img/logo-shardbyte-master-light.webp" alt="logo-shardbyte" width="150"/>
-</div>
+# FeatherLight
 
----
+FeatherLight is an SPT server mod that makes selected item categories weightless. It changes item-template weights when the server starts, so the behavior applies consistently to newly generated and existing instances of those templates.
 
-## Overview
+## Compatibility
 
-**FeatherLight** is a mod for SPT that makes multiple categories of items weightless, enhancing your gameplay experience by reducing encumbrance and allowing for greater mobility and agility in raids.
+- SPT 4.1.5
+- Server mod; no BepInEx plugin is required
 
-## Features
+The DLL is built against SPT 4.1.5. Rebuild it against the matching server packages before using it with another SPT patch.
 
-- **Weightless Items**: Multiple categories of items are set to zero weight.
-- **Improved Mobility**: Move faster and carry more without the burden of weight.
-- **Customizable**: Easily adjust which categories of items are weightless.
+## Categories
 
-## Usage
+The following categories are enabled by default:
 
-After installing the FeatherLight mod, the following categories of items will be weightless by default:
-    - Ammo
-    - Throwables (Grenades)
-    - Food
-    - Drink
-    - Medical Supplies
+- Loose ammunition
+- Throwable weapons and grenades
+- Food
+- Drinks
+- Medical supplies
 
-### Customization
+Food and drinks are evaluated independently. Disabling drinks keeps drink items at their original weight even when food remains enabled.
 
-To customize which categories of items are weightless:
+## Configuration
 
-1. Open the `config.jsonc` file located in the mod's directory.
-2. Edit the configuration to include or exclude categories as needed.
-3. Save your changes and restart SPT for the changes to take effect.
+Edit `SPT_Runtime/user/mods/Shardbyte-FeatherLight/config/config.json`, then restart the SPT server. Every option must contain an `enabled` Boolean value.
 
-Example configuration:
-```jsonc
+```json
 {
-// Make Ammo weightless
-// Default: true
-  "lightAmmo": {
-    "enabled": true
-},
-// Make Throwables weightless
-// Default: true
-"lightThrowables": {
-  "enabled": true
-},
-// Make Food weightless
-// Default: true
-"lightFood": {
-  "enabled": true
-},
-// Make Drinks weightless
-// Default: true
-"lightDrink": {
-  "enabled": true
-},
-// Make Medical Supplies weightless
-// Default: true
-"lightMeds": {
-  "enabled": true
-}
+  "lightAmmo": { "enabled": true },
+  "lightThrowables": { "enabled": true },
+  "lightFood": { "enabled": true },
+  "lightDrink": { "enabled": true },
+  "lightMeds": { "enabled": true }
 }
 ```
 
-### Compatibility
+FeatherLight logs how many templates it changed in each enabled category. Invalid or incomplete configuration is rejected before any item weights are modified.
 
-**FeatherLight** is compatible with the latest version of SPT and works seamlessly with most other mods.
-  - Supports: 3.9.0-3.9.x
+## Install
 
-### License
+Extract the release ZIP into the root of the SPT installation. Confirm this file exists before starting the server:
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+```text
+SPT_Runtime/user/mods/Shardbyte-FeatherLight/FeatherLight.dll
+```
 
-Enjoy a lighter, faster Tarkov experience with FeatherLight!
+The archive includes the complete install hierarchy and a `VERSION.txt` manifest. Remove any older `Shardbyte-FeatherLight` TypeScript installation before extracting this rebuilt edition so SPT cannot load both implementations.
+
+## Build and package
+
+```bash
+dotnet build FeatherLight.csproj -c Release
+dotnet run --project tests/FeatherLight.Tests.csproj -c Release
+./package.sh
+```
+
+The packaging script validates the configuration, builds the project, and creates `artifacts/Shardbyte-FeatherLight-<version>.zip`.
+
+## License
+
+FeatherLight is available under the MIT License. See `LICENSE`.

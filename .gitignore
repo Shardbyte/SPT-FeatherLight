@@ -1,0 +1,33 @@
+# .NET build output
+**/[Bb]in/
+**/[Oo]bj/
+artifacts/
+
+# Test and coverage output
+TestResults/
+coverage/
+*.trx
+*.coverage
+*.coveragexml
+coverage*.xml
+
+# IDE and per-user settings
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.DotSettings.user
+
+# NuGet packages
+packages/
+*.nupkg
+*.snupkg
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*~
+.DS_Store
+Thumbs.db

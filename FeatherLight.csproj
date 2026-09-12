@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>FeatherLight</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+    <AssemblyName>FeatherLight</AssemblyName>
+    <Version>2.0.0</Version>
+    <SptVersion>4.1.5</SptVersion>
+    <Authors>Shardbyte</Authors>
+    <Company>Shardbyte</Company>
+    <Product>Shardbyte FeatherLight</Product>
+    <AssemblyTitle>Shardbyte FeatherLight</AssemblyTitle>
+    <Description>Configurable weightless item categories for SPT.</Description>
+    <Copyright>Copyright © 2024-2026 Shardbyte</Copyright>
+    <InformationalVersion>$(Version)</InformationalVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SPTushonka.Common" Version="$(SptVersion)" />
+    <PackageReference Include="SPTushonka.DI" Version="$(SptVersion)" />
+    <PackageReference Include="SPTushonka.Server.Core" Version="$(SptVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Compile Remove="tests\**\*.cs" />
+    <Content Remove="tests\**\*" />
+    <None Remove="tests\**\*" />
+  </ItemGroup>
+
+</Project>
