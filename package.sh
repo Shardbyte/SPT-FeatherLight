@@ -9,11 +9,39 @@ mod_dir="$stage_root/SPT_Runtime/user/mods/$install_dir_name"
 config_file="$project_dir/config/config.json"
 
 jq -e '
-    (.lightAmmo.enabled | type == "boolean")
-    and (.lightThrowables.enabled | type == "boolean")
-    and (.lightFood.enabled | type == "boolean")
-    and (.lightDrink.enabled | type == "boolean")
-    and (.lightMeds.enabled | type == "boolean")
+    def valid_ids: type == "array" and all(.[]; type == "string" and test("^[0-9A-Fa-f]{24}$"));
+    (.preset | ascii_downcase) as $preset
+    | ($preset == "custom" or $preset == "casual" or $preset == "reducedsupplies" or $preset == "fullyweightless")
+    and (.conflictDiagnostics.enabled | type == "boolean")
+    and (.conflictDiagnostics.maxLoggedItems | type == "number" and . >= 0 and . <= 200 and floor == .)
+    and (.includedTemplateIds | valid_ids)
+    and (.includedCategoryIds | valid_ids)
+    and (.excludedTemplateIds | valid_ids)
+    and (.excludedCategoryIds | valid_ids)
+    and (
+      $preset != "custom"
+      or (
+        (
+          ((.weight.mode | ascii_downcase) == "percentage"
+            and (.weight.percentageReduction | type == "number" and . >= 0 and . <= 100))
+          or ((.weight.mode | ascii_downcase) == "definitive"
+            and (.weight.definitiveWeightKg | type == "number" and . >= 0))
+        )
+        and ([
+          .categories.ammo,
+          .categories.ammoBoxes,
+          .categories.magazines,
+          .categories.throwables,
+          .categories.food,
+          .categories.drinks,
+          .categories.meds,
+          .categories.armor,
+          .categories.weapons,
+          .categories.rigs,
+          .categories.backpacks
+        ] | all(.[]; type == "boolean"))
+      )
+    )
 ' "$config_file" >/dev/null
 
 dotnet build "$project_file" --configuration Release

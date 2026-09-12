@@ -1,17 +1,29 @@
 {
-  "lightAmmo": {
-    "enabled": true
+  "preset": "custom",
+  "weight": {
+    "mode": "percentage",
+    "percentageReduction": 100,
+    "definitiveWeightKg": 0
   },
-  "lightThrowables": {
-    "enabled": true
+  "categories": {
+    "ammo": true,
+    "ammoBoxes": false,
+    "magazines": false,
+    "throwables": true,
+    "food": true,
+    "drinks": true,
+    "meds": true,
+    "armor": false,
+    "weapons": false,
+    "rigs": false,
+    "backpacks": false
   },
-  "lightFood": {
-    "enabled": true
+  "conflictDiagnostics": {
+    "enabled": true,
+    "maxLoggedItems": 25
   },
-  "lightDrink": {
-    "enabled": true
-  },
-  "lightMeds": {
-    "enabled": true
-  }
+  "includedTemplateIds": [],
+  "includedCategoryIds": [],
+  "excludedTemplateIds": [],
+  "excludedCategoryIds": []
 }

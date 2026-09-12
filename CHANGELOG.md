@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0
+
+- Added percentage reduction and definitive-weight modes.
+- Added separate ammo-box, magazine, armor, weapon, rig, and backpack toggles.
+- Added custom included and excluded template/category IDs, with exclusions taking priority.
+- Added casual, reduced-supplies, fully-weightless, and custom presets.
+- Added bounded conflict diagnostics using a baseline captured before later mod changes.
+
 ## 2.0.0
 
 - Rebuilt FeatherLight as a native C# server mod for SPT 4.1.5.
