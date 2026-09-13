@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Run the configuration regression tests before creating a release archive.
+
 ## 2.1.0
 
 - Added percentage reduction and definitive-weight modes.

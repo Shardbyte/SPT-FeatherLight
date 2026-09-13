@@ -45,6 +45,7 @@ jq -e '
 ' "$config_file" >/dev/null
 
 dotnet build "$project_file" --configuration Release
+dotnet run --project "$project_dir/tests/FeatherLight.Tests.csproj" --configuration Release
 mod_version="$(dotnet msbuild "$project_file" -nologo -getProperty:Version)"
 spt_version="$(dotnet msbuild "$project_file" -nologo -getProperty:SptVersion)"
 archive="$project_dir/artifacts/$install_dir_name-$mod_version.zip"
