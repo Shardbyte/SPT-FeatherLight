@@ -1,0 +1,83 @@
+name: Build, test, and release
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: package-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Check scripts and repository whitespace
+        run: |
+          bash -n package.sh
+          git diff --check
+          if [[ -d scripts ]]; then
+            find scripts -type f -name '*.py' -exec python3 -m py_compile {} +
+          fi
+
+  package:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - name: Build, test, and verify package
+        run: bash package.sh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-package
+          path: artifacts/*.zip
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [static, package]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: release-package
+          path: artifacts
+      - name: Validate tag and publish immutable assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          version="${RELEASE_TAG#v}"
+          shopt -s nullglob
+          archives=(artifacts/*.zip)
+          ((${#archives[@]} > 0)) || { echo 'No package archives found' >&2; exit 1; }
+          for archive in "${archives[@]}"; do
+            [[ "${archive##*/}" == *-"$version".zip ]] || {
+              echo "Tag $RELEASE_TAG does not match ${archive##*/}" >&2
+              exit 1
+            }
+          done
+          gh release view "$RELEASE_TAG" >/dev/null 2>&1 && {
+            echo "Release $RELEASE_TAG already exists; refusing to replace assets" >&2
+            exit 1
+          }
+          gh release create "$RELEASE_TAG" "${archives[@]}" --verify-tag --generate-notes --title "$RELEASE_TAG"

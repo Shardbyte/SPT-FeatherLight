@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add standards-compliant repository metadata and GitHub Actions package/release automation.
+
 ## 2.1.1 - 2026-09-13
 
 - Run the configuration regression tests before creating a release archive.
